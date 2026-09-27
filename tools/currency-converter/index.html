@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Professional Currency Converter - USEVANTA">
+<title>Currency Converter | USEVANTA</title>
+
+<style>
+:root{
+  --primary:#173b72;
+  --primary-dark:#102d58;
+  --accent:#2878d8;
+  --accent-light:#edf5ff;
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --border:#dfe6ef;
+  --text:#152238;
+  --muted:#718096;
+  --hover:#f2f7fd;
+  --success:#16835b;
+  --danger:#c63d3d;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+body{
+  min-height:100vh;
+}
+
+header{
+  height:66px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 24px;
+}
+
+.logo{
+  color:var(--primary);
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:.4px;
+}
+
+.page{
+  width:100%;
+  max-width:760px;
+  margin:34px auto;
+  padding:0 16px;
+}
+
+.tool-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 12px 40px rgba(22,48,82,.07);
+}
+
+.tool-header{
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.tool-title{
+  margin:0;
+  color:var(--primary);
+  font-size:29px;
+  font-weight:800;
+}
+
+.tool-description{
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.rate-line{
+  min-height:20px;
+  margin-bottom:14px;
+  text-align:center;
+  color:#536174;
+  font-size:13px;
+  font-weight:600;
+}
+
+.converter-field{
+  position:relative;
+}
+
+.money-box{
+  min-height:88px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 14px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  transition:.2s;
+}
+
+.money-box:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(40,120,216,.08);
+}
+
+.amount-area{
+  flex:1;
+  min-width:0;
+}
+
+.amount-input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--text);
+  font-size:30px;
+  font-weight:750;
+}
+
+.result{
+  font-size:30px;
+  font-weight:750;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.currency-button{
+  min-width:205px;
+  border:0;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:7px;
+  border-radius:12px;
+  cursor:pointer;
+  color:var(--text);
+  text-align:left;
+}
+
+.currency-button:hover{
+  background:var(--hover);
+}
+
+.round-flag{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border-radius:50%;
+  object-fit:cover;
+  display:block;
+  box-shadow:0 1px 5px rgba(0,0,0,.14);
+}
+
+.currency-details{
+  min-width:0;
+  flex:1;
+}
+
+.currency-name{
+  font-size:14px;
+  font-weight:750;
+  line-height:18px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.currency-code{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:600;
+}
+
+.arrow{
+  color:var(--primary);
+  font-size:17px;
+  margin-left:auto;
+}
+
+.swap-button{
+  width:48px;
+  height:48px;
+  margin:10px auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--border);
+  border-radius:50%;
+  background:#fff;
+  color:var(--accent);
+  font-size:21px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(22,48,82,.08);
+  transition:.25s;
+}
+
+.swap-button:hover{
+  background:var(--accent-light);
+  transform:rotate(180deg);
+}
+
+.dropdown{
+  display:none;
+  position:absolute;
+  z-index:100;
+  right:0;
+  top:78px;
+  width:360px;
+  padding:11px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:17px;
+  box-shadow:0 18px 45px rgba(16,45,88,.17);
+}
+
+.dropdown.open{
+  display:block;
+}
+
+.search-box{
+  width:100%;
+  height:44px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:0 13px;
+  outline:0;
+  color:var(--text);
+  font-size:14px;
+  background:#fafcff;
+}
+
+.search-box:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(40,120,216,.08);
+}
+
+.currency-list{
+  max-height:350px;
+  overflow-y:auto;
+  margin-top:8px;
+}
+
+.section-title{
+  padding:9px 7px 6px;
+  color:#8792a2;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+}
+
+.currency-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 8px;
+  border-radius:11px;
+  cursor:pointer;
+}
+
+.currency-item:hover{
+  background:var(--hover);
+}
+
+.currency-item .round-flag{
+  width:30px;
+  height:30px;
+  min-width:30px;
+}
+
+.item-name{
+  flex:1;
+  min-width:0;
+  font-size:14px;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.item-code{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+}
+
+.status{
+  margin-top:17px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.status.success{
+  color:var(--success);
+}
+
+.status.error{
+  color:var(--danger);
+}
+
+.loading{
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+@media(max-width:620px){
+
+  header{
+    height:60px;
+    padding:0 17px;
+  }
+
+  .page{
+    margin:18px auto;
+    padding:0 10px;
+  }
+
+  .tool-card{
+    padding:18px 14px;
+    border-radius:19px;
+  }
+
+  .tool-title{
+    font-size:24px;
+  }
+
+  .money-box{
+    min-height:78px;
+    padding:10px;
+  }
+
+  .amount-input,
+  .result{
+    font-size:23px;
+  }
+
+  .currency-button{
+    min-width:150px;
+  }
+
+  .currency-name{
+    max-width:90px;
+  }
+
+  .dropdown{
+    width:100%;
+    top:73px;
+  }
+}
+
+@media(max-width:420px){
+
+  .currency-button{
+    min-width:125px;
+  }
+
+  .currency-name{
+    max-width:68px;
+  }
+
+  .round-flag{
+    width:30px;
+    height:30px;
+    min-width:30px;
+  }
+
+  .amount-input,
+  .result{
+    font-size:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">USEVANTA</div>
+</header>
+
+<main class="page">
+
+<section class="tool-card">
+
+<div class="tool-header">
+  <h1 class="tool-title">Currency Converter</h1>
+  <p class="tool-description">
+    Convert worldwide currencies and cryptocurrencies
+  </p>
+</div>
+
+<div id="rateLine" class="rate-line">
+  Loading latest rate...
+</div>
+
+
+<!-- FROM -->
+
+<div class="converter-field">
+
+<div class="money-box">
+
+<div class="amount-area">
+<input
+  id="amount"
+  class="amount-input"
+  type="number"
+  value="1"
+  min="0"
+  step="any"
+  inputmode="decimal"
+  aria-label="Amount">
+</div>
+
+<button
+  id="fromButton"
+  class="currency-button"
+  type="button">
+
+<img
+  id="fromFlag"
+  class="round-flag"
+  src="https://flagcdn.com/w80/us.png"
+  alt="US">
+
+<div class="currency-details">
+  <div id="fromName" class="currency-name">US Dollar</div>
+  <div id="fromCode" class="currency-code">USD</div>
+</div>
+
+<span class="arrow">⌄</span>
+
+</button>
+
+</div>
+
+<div id="fromDropdown" class="dropdown">
+
+<input
+  id="fromSearch"
+  class="search-box"
+  type="search"
+  autocomplete="off"
+  placeholder="Search country or currency...">
+
+<div id="fromList" class="currency-list">
+  <div class="loading">Loading...</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SWAP -->
+
+<button
+  id="swapButton"
+  class="swap-button"
+  type="button"
+  aria-label="Swap currencies">
+  ↕
+</button>
+
+
+<!-- TO -->
+
+<div class="converter-field">
+
+<div class="money-box">
+
+<div class="amount-area">
+<div id="result" class="result">—</div>
+</div>
+
+<button
+  id="toButton"
+  class="currency-button"
+  type="button">
+
+<img
+  id="toFlag"
+  class="round-flag"
+  src="https://flagcdn.com/w80/in.png"
+  alt="India">
+
+<div class="currency-details">
+  <div id="toName" class="currency-name">Indian Rupee</div>
+  <div id="toCode" class="currency-code">INR</div>
+</div>
+
+<span class="arrow">⌄</span>
+
+</button>
+
+</div>
+
+<div id="toDropdown" class="dropdown">
+
+<input
+  id="toSearch"
+  class="search-box"
+  type="search"
+  autocomplete="off"
+  placeholder="Search country or currency...">
+
+<div id="toList" class="currency-list">
+  <div class="loading">Loading...</div>
+</div>
+
+</div>
+
+</div>
+
+<div id="status" class="status">
+  Loading currencies...
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   USEVANTA CURRENCY CONVERTER
+   ===================================================== */
+
+const FRANKFURTER =
+"https://api.frankfurter.dev/v2";
+
+const COINGECKO =
+"https://api.coingecko.com/api/v3";
+
+let currencies=[];
+let fromCurrency="USD";
+let toCurrency="INR";
+let cryptoPrices={};
+let requestNumber=0;
+
+
+/* =====================================================
+   COUNTRY FLAGS
+   ===================================================== */
+
+const countryFlags={
+
+AED:"ae",AFN:"af",ALL:"al",AMD:"am",ANG:"cw",
+AOA:"ao",ARS:"ar",AUD:"au",AWG:"aw",AZN:"az",
+BAM:"ba",BBD:"bb",BDT:"bd",BGN:"bg",BHD:"bh",
+BIF:"bi",BMD:"bm",BND:"bn",BOB:"bo",BRL:"br",
+BSD:"bs",BTN:"bt",BWP:"bw",BYN:"by",BZD:"bz",
+CAD:"ca",CDF:"cd",CHF:"ch",CLP:"cl",CNY:"cn",
+COP:"co",CRC:"cr",CUP:"cu",CVE:"cv",CZK:"cz",
+DJF:"dj",DKK:"dk",DOP:"do",DZD:"dz",EGP:"eg",
+ERN:"er",ETB:"et",EUR:"eu",FJD:"fj",FKP:"fk",
+GBP:"gb",GEL:"ge",GHS:"gh",GIP:"gi",GMD:"gm",
+GNF:"gn",GTQ:"gt",GYD:"gy",HKD:"hk",HNL:"hn",
+HTG:"ht",HUF:"hu",IDR:"id",ILS:"il",INR:"in",
+IQD:"iq",IRR:"ir",ISK:"is",JMD:"jm",JOD:"jo",
+JPY:"jp",KES:"ke",KGS:"kg",KHR:"kh",KMF:"km",
+KPW:"kp",KRW:"kr",KWD:"kw",KYD:"ky",KZT:"kz",
+LAK:"la",LBP:"lb",LKR:"lk",LRD:"lr",LSL:"ls",
+LYD:"ly",MAD:"ma",MDL:"md",MGA:"mg",MKD:"mk",
+MMK:"mm",MNT:"mn",MOP:"mo",MRU:"mr",MUR:"mu",
+MVR:"mv",MWK:"mw",MXN:"mx",MYR:"my",MZN:"mz",
+NAD:"na",NGN:"ng",NIO:"ni",NOK:"no",NPR:"np",
+NZD:"nz",OMR:"om",PAB:"pa",PEN:"pe",PGK:"pg",
+PHP:"ph",PKR:"pk",PLN:"pl",PYG:"py",QAR:"qa",
+RON:"ro",RSD:"rs",RUB:"ru",RWF:"rw",SAR:"sa",
+SBD:"sb",SCR:"sc",SDG:"sd",SEK:"se",SGD:"sg",
+SHP:"sh",SLE:"sl",SOS:"so",SRD:"sr",SSP:"ss",
+STN:"st",SVC:"sv",SYP:"sy",SZL:"sz",THB:"th",
+TJS:"tj",TMT:"tm",TND:"tn",TOP:"to",TRY:"tr",
+TTD:"tt",TWD:"tw",TZS:"tz",UAH:"ua",UGX:"ug",
+USD:"us",UYU:"uy",UZS:"uz",VES:"ve",VND:"vn",
+VUV:"vu",WST:"ws",XAF:"cm",XCD:"ag",XOF:"sn",
+XPF:"pf",YER:"ye",ZAR:"za",ZMW:"zm",ZWL:"zw"
+
+};
+
+
+/* =====================================================
+   CRYPTO
+   ===================================================== */
+
+const cryptoList=[
+
+["bitcoin","Bitcoin","BTC"],
+["ethereum","Ethereum","ETH"],
+["tether","Tether","USDT"],
+["binancecoin","BNB","BNB"],
+["ripple","XRP","XRP"],
+["usd-coin","USD Coin","USDC"],
+["solana","Solana","SOL"],
+["dogecoin","Dogecoin","DOGE"],
+["cardano","Cardano","ADA"],
+["tron","TRON","TRX"],
+["avalanche-2","Avalanche","AVAX"],
+["polkadot","Polkadot","DOT"],
+["chainlink","Chainlink","LINK"],
+["litecoin","Litecoin","LTC"],
+["bitcoin-cash","Bitcoin Cash","BCH"],
+["stellar","Stellar","XLM"],
+["shiba-inu","Shiba Inu","SHIB"],
+["the-open-network","Toncoin","TON"],
+["uniswap","Uniswap","UNI"],
+["pepe","Pepe","PEPE"],
+["internet-computer","Internet Computer","ICP"],
+["near","NEAR Protocol","NEAR"],
+["aptos","Aptos","APT"],
+["cosmos","Cosmos","ATOM"],
+["filecoin","Filecoin","FIL"],
+["arbitrum","Arbitrum","ARB"],
+["optimism","Optimism","OP"],
+["aave","Aave","AAVE"],
+["maker","Maker","MKR"],
+["algorand","Algorand","ALGO"],
+["tezos","Tezos","XTZ"],
+["monero","Monero","XMR"],
+["zcash","Zcash","ZEC"],
+["dash","Dash","DASH"],
+["vechain","VeChain","VET"],
+["sui","Sui","SUI"],
+["render-token","Render","RENDER"],
+["injective-protocol","Injective","INJ"],
+["kaspa","Kaspa","KAS"]
+
+];
+
+
+/* =====================================================
+   FLAG URL
+   ===================================================== */
+
+function getFlag(code){
+
+if(code==="EUR"){
+return "https://flagcdn.com/w80/eu.png";
+}
+
+const country=countryFlags[code];
+
+return country
+?`https://flagcdn.com/w80/${country}.png`
+:"https://flagcdn.com/w80/un.png";
+
+}
+
+
+/* =====================================================
+   LOAD FIAT CURRENCIES
+   ===================================================== */
+
+async function loadCurrencies(){
+
+try{
+
+const response=
+await fetch(
+FRANKFURTER+"/currencies",
+{
+cache:"no-store"
+}
+);
+
+if(!response.ok){
+throw new Error("Currency API error");
+}
+
+const data=await response.json();
+
+currencies=
+Object.entries(data).map(([code,value])=>({
+
+type:"fiat",
+code,
+name:
+typeof value==="string"
+?value
+:(value.name||code)
+
+}));
+
+}catch(error){
+
+/*
+  Basic fallback.
+  Normal operation uses the API.
+*/
+
+currencies=[
+
+["USD","US Dollar"],
+["EUR","Euro"],
+["GBP","British Pound"],
+["INR","Indian Rupee"],
+["JPY","Japanese Yen"],
+["CNY","Chinese Yuan"],
+["AUD","Australian Dollar"],
+["CAD","Canadian Dollar"],
+["CHF","Swiss Franc"],
+["NZD","New Zealand Dollar"],
+["SGD","Singapore Dollar"],
+["HKD","Hong Kong Dollar"],
+["KRW","South Korean Won"],
+["AED","UAE Dirham"],
+["SAR","Saudi Riyal"],
+["PKR","Pakistani Rupee"],
+["BDT","Bangladeshi Taka"],
+["NPR","Nepalese Rupee"],
+["LKR","Sri Lankan Rupee"],
+["THB","Thai Baht"],
+["MYR","Malaysian Ringgit"],
+["IDR","Indonesian Rupiah"],
+["VND","Vietnamese Dong"],
+["PHP","Philippine Peso"],
+["BRL","Brazilian Real"],
+["MXN","Mexican Peso"],
+["ZAR","South African Rand"],
+["NGN","Nigerian Naira"],
+["EGP","Egyptian Pound"],
+["TRY","Turkish Lira"],
+["RUB","Russian Ruble"],
+["PLN","Polish Zloty"],
+["SEK","Swedish Krona"],
+["NOK","Norwegian Krone"],
+["DKK","Danish Krone"],
+["CZK","Czech Koruna"],
+["HUF","Hungarian Forint"],
+["RON","Romanian Leu"],
+["ILS","Israeli New Shekel"],
+["UAH","Ukrainian Hryvnia"],
+["QAR","Qatari Riyal"],
+["KWD","Kuwaiti Dinar"],
+["BHD","Bahraini Dinar"],
+["OMR","Omani Rial"],
+["JOD","Jordanian Dinar"],
+["MAD","Moroccan Dirham"],
+["KES","Kenyan Shilling"],
+["GHS","Ghanaian Cedi"],
+["TZS","Tanzanian Shilling"],
+["UGX","Ugandan Shilling"],
+["ETB","Ethiopian Birr"],
+["MUR","Mauritian Rupee"],
+["BWP","Botswana Pula"],
+["NAD","Namibian Dollar"],
+["ZMW","Zambian Kwacha"],
+["ARS","Argentine Peso"],
+["CLP","Chilean Peso"],
+["COP","Colombian Peso"],
+["PEN","Peruvian Sol"],
+["ISK","Icelandic Krona"],
+["BGN","Bulgarian Lev"],
+["RSD","Serbian Dinar"],
+["BAM","Bosnia and Herzegovina Mark"],
+["ALL","Albanian Lek"],
+["MKD","Macedonian Denar"],
+["GEL","Georgian Lari"],
+["AMD","Armenian Dram"],
+["AZN","Azerbaijani Manat"],
+["KZT","Kazakhstani Tenge"],
+["UZS","Uzbekistani Som"],
+["KGS","Kyrgyzstani Som"],
+["TJS","Tajikistani Somoni"],
+["MNT","Mongolian Tugrik"],
+["TWD","Taiwan Dollar"],
+["FJD","Fiji Dollar"],
+["PGK","Papua New Guinea Kina"],
+["WST","Samoan Tala"],
+["TOP","Tongan Paanga"],
+["VUV","Vanuatu Vatu"]
+
+].map(x=>({
+type:"fiat",
+code:x[0],
+name:x[1]
+}));
+
+}
+
+}
+
+
+/* =====================================================
+   LOAD CRYPTO
+===================================================== */
+
+async function loadCrypto(){
+
+try{
+
+const ids=
+cryptoList
+.map(x=>x[0])
+.join(",");
+
+const response=
+await fetch(
+COINGECKO+
+"/simple/price?ids="+
+encodeURIComponent(ids)+
+"&vs_currencies=usd",
+{
+cache:"no-store"
+}
+);
+
+if(!response.ok){
+throw new Error("Crypto API error");
+}
+
+cryptoPrices=
+await response.json();
+
+}catch(error){
+
+cryptoPrices={};
+
+}
+
+}
+
+
+/* =====================================================
+   ALL ASSETS
+===================================================== */
+
+function getAssets(){
+
+return [
+
+...currencies,
+
+...cryptoList.map(x=>({
+
+type:"crypto",
+id:x[0],
+name:x[1],
+code:x[2]
+
+}))
+
+];
+
+}
+
+
+/* =====================================================
+   FIND ASSET
+===================================================== */
+
+function findAsset(code){
+
+return getAssets()
+.find(x=>x.code===code);
+
+}
+
+
+/* =====================================================
+   RENDER CURRENCY LIST
+===================================================== */
+
+function renderList(listId,search=""){
+
+const box=document.getElementById(listId);
+
+const query=search.toLowerCase().trim();
+
+box.innerHTML="";
+
+const fiat=
+currencies.filter(x=>
+x.code.toLowerCase().includes(query)||
+x.name.toLowerCase().includes(query)
+);
+
+const crypto=
+cryptoList
+.map(x=>({
+type:"crypto",
+id:x[0],
+name:x[1],
+code:x[2]
+}))
+.filter(x=>
+x.code.toLowerCase().includes(query)||
+x.name.toLowerCase().includes(query)
+);
+
+
+if(fiat.length){
+
+const title=document.createElement("div");
+
+title.className="section-title";
+title.textContent="Fiat currencies";
+
+box.appendChild(title);
+
+fiat.forEach(asset=>
+addItem(box,asset,listId)
+);
+
+}
+
+
+if(crypto.length){
+
+const title=document.createElement("div");
+
+title.className="section-title";
+title.textContent="Cryptocurrencies";
+
+box.appendChild(title);
+
+crypto.forEach(asset=>
+addItem(box,asset,listId)
+);
+
+}
+
+}
+
+
+/* =====================================================
+   ADD ITEM
+===================================================== */
+
+function addItem(box,asset,listId){
+
+const item=document.createElement("div");
+
+item.className="currency-item";
+
+let image;
+
+if(asset.type==="crypto"){
+
+image=
+"https://assets.coingecko.com/coins/images/1/large/bitcoin.png";
+
+}else{
+
+image=getFlag(asset.code);
+
+}
+
+item.innerHTML=`
+
+<img
+class="round-flag"
+src="${image}"
+alt=""
+onerror="this.src='https://flagcdn.com/w80/un.png'">
+
+<div class="item-name">
+${escapeHTML(asset.name)}
+</div>
+
+<div class="item-code">
+${asset.code}
+</div>
+
+`;
+
+item.onclick=()=>{
+
+if(listId==="fromList"){
+fromCurrency=asset.code;
+}else{
+toCurrency=asset.code;
+}
+
+closeDropdowns();
+updateButtons();
+convert();
+
+};
+
+box.appendChild(item);
+
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+function updateButtons(){
+
+const from=findAsset(fromCurrency);
+const to=findAsset(toCurrency);
+
+if(from){
+
+document.getElementById("fromFlag").src=
+from.type==="crypto"
+?"https://assets.coingecko.com/coins/images/1/large/bitcoin.png"
+:getFlag(from.code);
+
+document.getElementById("fromName")
+.textContent=from.name;
+
+document.getElementById("fromCode")
+.textContent=from.code;
+
+}
+
+if(to){
+
+document.getElementById("toFlag").src=
+to.type==="crypto"
+?"https://assets.coingecko.com/coins/images/1/large/bitcoin.png"
+:getFlag(to.code);
+
+document.getElementById("toName")
+.textContent=to.name;
+
+document.getElementById("toCode")
+.textContent=to.code;
+
+}
+
+}
+
+
+/* =====================================================
+   USD VALUE
+===================================================== */
+
+async function getUSDValue(asset){
+
+if(asset.type==="crypto"){
+
+if(!cryptoPrices[asset.id]){
+await loadCrypto();
+}
+
+const price=
+cryptoPrices[asset.id]?.usd;
+
+if(!price){
+throw new Error("Crypto price unavailable");
+}
+
+return price;
+
+}
+
+if(asset.code==="USD"){
+return 1;
+}
+
+const response=
+await fetch(
+FRANKFURTER+
+"/rate/USD/"+
+asset.code,
+{
+cache:"no-store"
+}
+);
+
+if(!response.ok){
+throw new Error("Fiat rate unavailable");
+}
+
+const data=
+await response.json();
+
+return data.rate;
+
+}
+
+
+/* =====================================================
+   CONVERT
+===================================================== */
+
+async function convert(){
+
+const current=++requestNumber;
+
+const amount=
+parseFloat(
+document.getElementById("amount").value
+);
+
+if(
+Number.isNaN(amount)||
+amount<0
+){
+
+document.getElementById("result")
+.textContent="—";
+
+return;
+
+}
+
+const from=findAsset(fromCurrency);
+const to=findAsset(toCurrency);
+
+if(!from||!to)return;
+
+try{
+
+document.getElementById("status")
+.className="status";
+
+document.getElementById("status")
+.textContent="Updating rate...";
+
+if(fromCurrency===toCurrency){
+
+document.getElementById("result")
+.textContent=formatNumber(amount);
+
+document.getElementById("rateLine")
+.textContent=
+`1 ${fromCurrency} = 1 ${toCurrency}`;
+
+document.getElementById("status")
+.textContent="Ready";
+
+return;
+
+}
+
+const fromUSD=
+await getUSDValue(from);
+
+const toUSD=
+await getUSDValue(to);
+
+if(current!==requestNumber)return;
+
+const rate=
+fromUSD/toUSD;
+
+const converted=
+amount*rate;
+
+document.getElementById("result")
+.textContent=
+formatNumber(converted);
+
+document.getElementById("rateLine")
+.textContent=
+`1 ${fromCurrency} = ${formatRate(rate)} ${toCurrency}`;
+
+document.getElementById("status")
+.className="status success";
+
+document.getElementById("status")
+.textContent=
+"Latest available rate";
+
+}catch(error){
+
+document.getElementById("result")
+.textContent="—";
+
+document.getElementById("rateLine")
+.textContent="Rate unavailable";
+
+document.getElementById("status")
+.className="status error";
+
+document.getElementById("status")
+.textContent=
+"Unable to get this rate right now. Please try again.";
+
+}
+
+}
+
+
+/* =====================================================
+   FORMAT
+===================================================== */
+
+function formatNumber(value){
+
+return Number(value).toLocaleString(
+undefined,
+{
+maximumFractionDigits:8
+}
+);
+
+}
+
+function formatRate(value){
+
+return Number(value).toLocaleString(
+undefined,
+{
+maximumFractionDigits:10
+}
+);
+
+}
+
+function escapeHTML(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   DROPDOWNS
+===================================================== */
+
+function closeDropdowns(){
+
+document
+.querySelectorAll(".dropdown")
+.forEach(menu=>
+menu.classList.remove("open")
+);
+
+}
+
+
+document.getElementById("fromButton")
+.addEventListener("click",function(event){
+
+event.stopPropagation();
+
+document
+.getElementById("toDropdown")
+.classList.remove("open");
+
+document
+.getElementById("fromDropdown")
+.classList.toggle("open");
+
+renderList(
+"fromList",
+document.getElementById("fromSearch").value
+);
+
+});
+
+
+document.getElementById("toButton")
+.addEventListener("click",function(event){
+
+event.stopPropagation();
+
+document
+.getElementById("fromDropdown")
+.classList.remove("open");
+
+document
+.getElementById("toDropdown")
+.classList.toggle("open");
+
+renderList(
+"toList",
+document.getElementById("toSearch").value
+);
+
+});
+
+
+document
+.getElementById("fromSearch")
+.addEventListener("input",function(){
+
+renderList(
+"fromList",
+this.value
+);
+
+});
+
+
+document
+.getElementById("toSearch")
+.addEventListener("input",function(){
+
+renderList(
+"toList",
+this.value
+);
+
+});
+
+
+document.addEventListener("click",function(){
+
+closeDropdowns();
+
+});
+
+
+document
+.querySelectorAll(".dropdown")
+.forEach(menu=>{
+
+menu.addEventListener(
+"click",
+function(event){
+event.stopPropagation();
+}
+);
+
+});
+
+
+/* =====================================================
+   SWAP
+===================================================== */
+
+document
+.getElementById("swapButton")
+.addEventListener("click",function(){
+
+const temp=fromCurrency;
+
+fromCurrency=toCurrency;
+toCurrency=temp;
+
+updateButtons();
+convert();
+
+});
+
+
+/* =====================================================
+   AMOUNT
+===================================================== */
+
+document
+.getElementById("amount")
+.addEventListener("input",function(){
+
+convert();
+
+});
+
+
+/* =====================================================
+   START
+===================================================== */
+
+async function start(){
+
+document.getElementById("status")
+.textContent="Loading currencies...";
+
+await loadCurrencies();
+
+await loadCrypto();
+
+updateButtons();
+
+renderList("fromList");
+
+renderList("toList");
+
+await convert();
+
+document.getElementById("status")
+.textContent=
+`${currencies.length}+ currencies available • Crypto included`;
+
+}
+
+start();
+
+
+/* =====================================================
+   AUTO REFRESH
+===================================================== */
+
+setInterval(async function(){
+
+await loadCrypto();
+
+convert();
+
+},60000);
+
+</script>
+
+</body>
+</html>
